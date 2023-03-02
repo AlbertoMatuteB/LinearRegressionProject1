@@ -1,3 +1,8 @@
+# predict the rent of a house/apartment/flat based on its size, number of bedrooms/hallways/kitchens, and city
+# Alberto Matute Beltran - A01704584
+# 2/March/2023
+
+# import the libraries
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
