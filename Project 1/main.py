@@ -2,22 +2,23 @@
 # Alberto Matute Beltran - A01704584
 # 2/March/2023
 
+# Dataset comes from: https://www.kaggle.com/datasets/iamsouravbanerjee/house-rent-prediction-dataset
+
 # import the libraries
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
+from sklearn import linear_model
+from sklearn.metrics import mean_absolute_error, r2_score
+from sklearn.metrics import mean_absolute_error
 
 
 # load the dataset into a pandas DataFrame
-rent_data = pd.read_csv('Project 1\House_Rent_Dataset.csv')
+rent_data = pd.read_csv('LinearRegressionProject1\Project 1\House_Rent_Dataset.csv')
 
 # print the first 5 rows of the dataset
 print(rent_data.head())
-
-# print the graph of the number of houses in each city
-sns.countplot(x='City', data=rent_data)
-plt.show()
 
 # print the count of rent values
 print(rent_data['Rent'].value_counts())
@@ -84,7 +85,6 @@ X_train, X_test, y_train, y_test = train_test_split(data_prepared, target, test_
 
 
 # fit the model
-from sklearn import linear_model
 
 # Create linear regression object
 reg = linear_model.LinearRegression()
@@ -94,13 +94,13 @@ reg.fit(X_train, y_train)
 
 
 # check the performance of the model
-from sklearn.metrics import mean_absolute_error, r2_score
+
 
 # Performance on training data
 predicted_y = reg.predict(X_train)
 train_mae = mean_absolute_error(y_train, predicted_y)
 
-from sklearn.metrics import mean_absolute_error
+
 
 # Performance on test data
 predicted_y = reg.predict(X_test)
@@ -110,25 +110,72 @@ print("the mean absolute error on the training data is: %.2f" % train_mae)
 print("the r-squared score is: %.2f" % r2_score(y_test, predicted_y))
 print(f"and it's coefficients are: {reg.coef_}")
 
-# plot the test error vs the training error
-plt.plot(y_test, predicted_y, 'o')
-plt.xlabel('Actual Rent')
-plt.ylabel('Predicted Rent')
+# plot the results of the model from 0 to 100000
+plt.scatter(y_test, predicted_y)
+plt.xlim(0, 100000)
+plt.ylim(0, 100000)
+plt.xlabel('True Values')
+plt.ylabel('Predicted Values')
 plt.show()
 
+# reduce the data_perpared to only 1000 rows
+data_prepared = data_prepared[:2000]
 
-# make predictions
+target = target[:2000]
 
-bhk = input('Enter the number of bedrooms/hallways/kitchens: ')
-size = input('Enter the size of the house/apartment/flat in square feet: ')
-city = input('Enter the city: ')
+X_train, X_test, y_train, y_test = train_test_split(data_prepared, target, test_size=0.2, random_state=424)
 
-input_data = pd.DataFrame([(size, bhk, city)], columns= predictors)
-input_data_prepared = preprocessor.transform(input_data)
+# Train the model again
+reg.fit(X_train, y_train)
 
-predicted_rent = reg.predict(input_data_prepared)
+# check the performance of the model
+# Performance on training data
+predicted_y = reg.predict(X_train)
+train_mae = mean_absolute_error(y_train, predicted_y)
 
-print('Predicted rent: ', predicted_rent)
+# Performance on test data
+predicted_y = reg.predict(X_test)
+test_mae = mean_absolute_error(y_test, predicted_y)
+
+print("the mean absolute error on the training data is: %.2f" % train_mae)
+print("the r-squared score is: %.2f" % r2_score(y_test, predicted_y))
+print(f"and it's coefficients are: {reg.coef_}")
+
+# plot the results of the model from 0 to 100000
+plt.scatter(y_test, predicted_y)
+plt.xlim(0, 100000)
+plt.ylim(0, 100000)
+plt.xlabel('True Values')
+plt.ylabel('Predicted Values')
+plt.show()
+
+# use cross validation to check the performance of the model
+from sklearn.model_selection import cross_val_score
+
+scores = cross_val_score(reg, data_prepared, target, scoring='neg_mean_absolute_error', cv=10)
+print("the mean absolute error on the cross validation is: %.2f" % -scores.mean())
+
+# make predictions until the user wants to stop
+while True:
+    bhk = input('Enter the number of bedrooms/hallways/kitchens (more than 1): ')
+    size = input('Enter the size of the house/apartment/flat in square feet (more than 200 feet): ')
+    city = input('Enter the city name: \n 1. Bangalore \n 2. Chennai \n 3. Delhi \n 4. Hyderabad \n 5. Kolkata \n 6. Mumbai \n')
+
+    input_data = pd.DataFrame([(size, bhk, city)], columns= predictors)
+    input_data_prepared = preprocessor.transform(input_data)
+
+    predicted_rent = reg.predict(input_data_prepared)
+
+    print("the predicted rent is: %.2f" % predicted_rent)
+
+    # ask the user if they want to make another prediction
+    another_prediction = input('Do you want to make another prediction? (y/n): ')
+    if another_prediction == 'n':
+        break
+
+
+
+
 
 
 
