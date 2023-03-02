@@ -149,12 +149,6 @@ plt.xlabel('True Values')
 plt.ylabel('Predicted Values')
 plt.show()
 
-# use cross validation to check the performance of the model
-from sklearn.model_selection import cross_val_score
-
-scores = cross_val_score(reg, data_prepared, target, scoring='neg_mean_absolute_error', cv=10)
-print("the mean absolute error on the cross validation is: %.2f" % -scores.mean())
-
 # make predictions until the user wants to stop
 while True:
     bhk = input('Enter the number of bedrooms/hallways/kitchens (more than 1): ')
