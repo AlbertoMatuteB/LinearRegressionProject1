@@ -110,28 +110,29 @@ print("the mean absolute error on the training data is: %.2f" % train_mae)
 print("the r-squared score is: %.2f" % r2_score(y_test, predicted_y))
 print(f"and it's coefficients are: {reg.coef_}")
 
-# plot the results of the model from 0 to 100000
+# plot the results of the model
 plt.scatter(y_test, predicted_y)
-plt.xlim(0, 100000)
-plt.ylim(0, 100000)
 plt.xlabel('True Values')
 plt.ylabel('Predicted Values')
 plt.show()
 
 # reduce the data_perpared to only 1000 rows
-data_prepared = data_prepared[:2000]
+data_prepared = data_prepared[:1000]
 
-target = target[:2000]
+target = target[:1000]
 
 X_train, X_test, y_train, y_test = train_test_split(data_prepared, target, test_size=0.2, random_state=424)
 
 # Train the model again
 reg.fit(X_train, y_train)
 
+
 # check the performance of the model
 # Performance on training data
 predicted_y = reg.predict(X_train)
 train_mae = mean_absolute_error(y_train, predicted_y)
+
+
 
 # Performance on test data
 predicted_y = reg.predict(X_test)
@@ -141,13 +142,17 @@ print("the mean absolute error on the training data is: %.2f" % train_mae)
 print("the r-squared score is: %.2f" % r2_score(y_test, predicted_y))
 print(f"and it's coefficients are: {reg.coef_}")
 
-# plot the results of the model from 0 to 100000
+# plot the results of the model
 plt.scatter(y_test, predicted_y)
-plt.xlim(0, 100000)
-plt.ylim(0, 100000)
 plt.xlabel('True Values')
 plt.ylabel('Predicted Values')
 plt.show()
+
+# use cross validation to check the performance of the model
+from sklearn.model_selection import cross_val_score
+
+scores = cross_val_score(reg, data_prepared, target, scoring='neg_mean_absolute_error', cv=10)
+print("the mean absolute error on the cross validation is: %.2f" % -scores.mean())
 
 # make predictions until the user wants to stop
 while True:
