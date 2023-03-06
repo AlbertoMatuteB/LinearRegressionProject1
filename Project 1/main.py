@@ -108,10 +108,12 @@ print("the mean absolute error on the training data is: %.2f" % train_mae)
 print("the r-squared score is: %.2f" % r2_score(y_test, predicted_y))
 print(f"and it's coefficients are: {reg.coef_}")
 
-# plot the results of the model
-plt.scatter(y_test, predicted_y)
-plt.xlabel('True Values')
-plt.ylabel('Predicted Values')
+# plot the results of the model with limmit of 100000
+plt.scatter(y_test, predicted_y, alpha=0.5)
+plt.xlabel('Actual Rent')
+plt.ylabel('Predicted Rent')
+plt.xlim(0, 100000)
+plt.ylim(0, 100000)
 plt.show()
 
 # use cross validation to check the performance of the model
