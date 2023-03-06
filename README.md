@@ -44,8 +44,6 @@ however, for the model we are only using the data of BHK, size, city and rent.
 
 - pandas
 
-- numpy
-
 - sklearn
 
 - matplotlib
