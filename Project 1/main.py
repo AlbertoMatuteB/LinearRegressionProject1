@@ -58,9 +58,9 @@ data = rent_data[predictors]
 target_name = 'Rent'
 target = rent_data[target_name]
 
-from sklearn.preprocessing import OneHotEncoder, OrdinalEncoder, StandardScaler
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
-city_encoder = OrdinalEncoder(categories=[['Bangalore', 'Chennai', 'Delhi', 'Hyderabad', 'Kolkata', 'Mumbai']])
+city_encoder = OneHotEncoder()
 nominal_preprocessor = OneHotEncoder(handle_unknown='ignore')
 numerical_preprocessor = StandardScaler()
 
@@ -90,40 +90,6 @@ X_train, X_test, y_train, y_test = train_test_split(data_prepared, target, test_
 reg = linear_model.LinearRegression()
 
 # Train the model
-reg.fit(X_train, y_train)
-
-
-# check the performance of the model
-
-
-# Performance on training data
-predicted_y = reg.predict(X_train)
-train_mae = mean_absolute_error(y_train, predicted_y)
-
-
-
-# Performance on test data
-predicted_y = reg.predict(X_test)
-test_mae = mean_absolute_error(y_test, predicted_y)
-
-print("the mean absolute error on the training data is: %.2f" % train_mae)
-print("the r-squared score is: %.2f" % r2_score(y_test, predicted_y))
-print(f"and it's coefficients are: {reg.coef_}")
-
-# plot the results of the model
-plt.scatter(y_test, predicted_y)
-plt.xlabel('True Values')
-plt.ylabel('Predicted Values')
-plt.show()
-
-# reduce the data_perpared to only 1000 rows
-data_prepared = data_prepared[:1000]
-
-target = target[:1000]
-
-X_train, X_test, y_train, y_test = train_test_split(data_prepared, target, test_size=0.2, random_state=424)
-
-# Train the model again
 reg.fit(X_train, y_train)
 
 
